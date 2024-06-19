@@ -74,11 +74,10 @@ room {
     schemaDirectory("$projectDir/schemas")
 }
 dependencies {
-    add("kspCommonMainMetadata", project(":composeApp"))
-    add("kspJvm", project(":composeApp"))
-    add("kspJvmTest", project(":composeApp")) // Not doing anything because there's no test source set for JVM
-    // There is no processing for the Linux x64 main source set, because kspLinuxX64 isn't specified
-    ksp(libs.androidx.room.compiler)
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
 }
 
 android {

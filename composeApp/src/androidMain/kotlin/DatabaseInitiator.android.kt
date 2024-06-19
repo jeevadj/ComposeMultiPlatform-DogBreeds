@@ -5,7 +5,7 @@ import database.DogDatabase
 import kotlinx.coroutines.Dispatchers
 import org.sample.cmpproject.KotlinProjApp
 
-actual fun getDatabaseInit() : RoomDatabase.Builder<DogDatabase> {
+actual fun getDatabaseInit() : DogDatabase {
     val context = KotlinProjApp.context
     val dbFile = context.getDatabasePath("user.db")
     return Room.databaseBuilder<DogDatabase>(
@@ -15,4 +15,5 @@ actual fun getDatabaseInit() : RoomDatabase.Builder<DogDatabase> {
         .fallbackToDestructiveMigrationOnDowngrade(true)
         .setDriver(BundledSQLiteDriver()) // Very important
         .setQueryCoroutineContext(Dispatchers.IO)
+        .build()
 }

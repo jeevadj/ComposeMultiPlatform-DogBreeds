@@ -6,7 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import platform.Foundation.NSHomeDirectory
 
-actual fun getDatabaseInit() : RoomDatabase.Builder<DogDatabase> {
+actual fun getDatabaseInit() : DogDatabase {
     val dbFile = NSHomeDirectory() + "/user.db"
     return Room.databaseBuilder<DogDatabase>(
         name = dbFile,
@@ -15,4 +15,5 @@ actual fun getDatabaseInit() : RoomDatabase.Builder<DogDatabase> {
         .fallbackToDestructiveMigrationOnDowngrade(true)
         .setDriver(BundledSQLiteDriver()) // Very important
         .setQueryCoroutineContext(Dispatchers.IO)
+        .build()
 }
