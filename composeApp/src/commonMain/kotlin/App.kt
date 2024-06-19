@@ -1,4 +1,8 @@
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -62,14 +66,14 @@ fun App() {
             val commonViewModel = koinViewModel<CommonViewModel>()
 
             NavHost(navController = navController, startDestination = "ListScreen") {
-                composable("ListScreen") {
+                composable("ListScreen", enterTransition = { EnterTransition.None }, exitTransition = { ExitTransition.None}) {
                     ListScreen(onItemClicked = { breedName ->
                         navController.currentBackStackEntry?.savedStateHandle?.set("breed",breedName)
                         navController.navigate("ViewBreed")
                     })
                 }
 
-                composable("ViewBreed"){
+                composable("ViewBreed", enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up)}, exitTransition = {slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down)}){
                     val breed = navController.previousBackStackEntry?.savedStateHandle?.get<String>("breed")
                     DetailScreen(breed){
                         navController.previousBackStackEntry?.savedStateHandle?.remove<String>("breed")
@@ -92,18 +96,22 @@ fun ListScreen(onItemClicked : (String) -> Unit) {
 
     when (uiState.listStatus) {
         ListStatus.Initiated -> {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Button(onClick = {
-                    screenModel.loadListFromApi()
-                }) {
-                    Text("Fetch Data")
-                }
-            }
+            screenModel.loadListFromApi()
+//            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+//                Button(onClick = {
+//                    screenModel.loadListFromApi()
+//                }) {
+//                    Text("Fetch Data")
+//                }
+//            }
         }
 
         ListStatus.Loading -> {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    CircularProgressIndicator()
+                    Text("Fetching Data", modifier = Modifier.padding(10.dp))
+                }
             }
         }
 

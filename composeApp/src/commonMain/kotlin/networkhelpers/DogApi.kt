@@ -30,11 +30,11 @@ class DogApi(val httpClient: HttpClient) {
                     if(breedsMapRes.value.jsonArray.isNotEmpty()){
                         val subBreeds = arrayListOf<String>()
                         breedsMapRes.value.jsonArray.forEach { jsonElement ->
-                            jsonElement.jsonPrimitive.contentOrNull?.let { it1 -> subBreeds.add(it1) }
+                            jsonElement.jsonPrimitive.contentOrNull?.let { it1 -> subBreeds.add(it1.capitalizeFirstLetter()) }
                         }
-                        breeds[breedsMapRes.key] = subBreeds
+                        breeds[breedsMapRes.key.capitalizeFirstLetter()] = subBreeds
                     } else {
-                        breeds[breedsMapRes.key] = arrayListOf()
+                        breeds[breedsMapRes.key.capitalizeFirstLetter()] = arrayListOf()
                     }
                 }
                 println(breeds)
@@ -58,4 +58,8 @@ class DogApi(val httpClient: HttpClient) {
 sealed class RandomImageResult {
     data class OnSuccess(val randomImageResponse: RandomImageResponse) : RandomImageResult()
     data object onFailed : RandomImageResult()
+}
+
+fun String.capitalizeFirstLetter(): String {
+    return this.replaceFirst(this[0],this[0].uppercaseChar())
 }

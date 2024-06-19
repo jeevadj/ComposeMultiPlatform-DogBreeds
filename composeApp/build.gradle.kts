@@ -8,9 +8,12 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
+    jvm()
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
@@ -30,7 +33,7 @@ kotlin {
     }
     
     sourceSets {
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -59,9 +62,23 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kamel.image)
             implementation(libs.navigation.compose)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
 
     }
+}
+
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+dependencies {
+    add("kspCommonMainMetadata", project(":composeApp"))
+    add("kspJvm", project(":composeApp"))
+    add("kspJvmTest", project(":composeApp")) // Not doing anything because there's no test source set for JVM
+    // There is no processing for the Linux x64 main source set, because kspLinuxX64 isn't specified
+    ksp(libs.androidx.room.compiler)
 }
 
 android {
