@@ -1,3 +1,4 @@
+import UI.BarChart
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -49,6 +50,7 @@ import org.koin.core.context.loadKoinModules
 import org.koin.dsl.koinApplication
 import org.koin.mp.KoinPlatform
 import org.koin.mp.KoinPlatformTools
+import screens.ChartScreen
 import screens.DetailScreen
 import viewmodel.CommonViewModel
 import viewmodel.ListStatus
@@ -61,7 +63,7 @@ fun App() {
             val navController = rememberNavController()
             val commonViewModel = koinViewModel<CommonViewModel>()
 
-            NavHost(navController = navController, startDestination = "ListScreen") {
+            NavHost(navController = navController, startDestination = "BarChart") {
                 composable("ListScreen") {
                     ListScreen(onItemClicked = { breedName ->
                         navController.currentBackStackEntry?.savedStateHandle?.set("breed",breedName)
@@ -75,6 +77,10 @@ fun App() {
                         navController.previousBackStackEntry?.savedStateHandle?.remove<String>("breed")
                         navController.navigateUp()
                     }
+                }
+
+                composable("BarChart"){
+                    ChartScreen()
                 }
             }
 
